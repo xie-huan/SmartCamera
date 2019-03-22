@@ -26,10 +26,6 @@ public class WelcomeAgain extends AppCompatActivity {
             }
 
         };
-        timer.schedule(task, 3000); // 3秒后执行
-    }
-
-    public void bntJoin(View view) {
-        startActivity(new Intent(this, com.example.a79000.smartcamera.Selection.class));
+        timer.schedule(task, 2000); // 2秒后执行
     }
 }

@@ -34,14 +34,4 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
 
-    <ImageView
-        android:id="@+id/join"
-        android:layout_width="86dp"
-        android:layout_height="61dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="28dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_media_ff"
-        android:onClick="bntJoin"/>
 </android.support.constraint.ConstraintLayout>

@@ -1,26 +1,19 @@
 package com.example.a79000.smartcamera;
 
-import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.net.wifi.p2p.WifiP2pManager;
-import android.provider.MediaStore;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
-import java.io.InputStream;
+import java.util.Random;
 
 public class SaveActivity extends AppCompatActivity {
 
@@ -29,6 +22,9 @@ public class SaveActivity extends AppCompatActivity {
 
     Button save;
     Button cancel;
+    TextView success;
+
+    int flag = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +34,7 @@ public class SaveActivity extends AppCompatActivity {
         croppedImage = (ImageView)findViewById(R.id.croppedImage);
         save = (Button)findViewById(R.id.save);
         cancel = (Button)findViewById(R.id.cancel);
+        success = (TextView)findViewById(R.id.location);
 
         croppedFile = (File) getIntent().getSerializableExtra("imageFile");
 
@@ -59,7 +56,30 @@ public class SaveActivity extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //the flag ensure you only save the picture once.
+                if(flag == 1){
+                    //save picture in mobile phone
 
+                    //generate the filename randomly.
+                    Random random = new Random();
+                    String fileName = String.valueOf(random.nextInt(Integer.MAX_VALUE));
+
+                    SavePicture.saveBmp2Gallery(SaveActivity.this,
+                            BitmapFactory.decodeFile(croppedFile.getPath()),
+                            fileName);
+
+                    String picPath = Environment.getExternalStorageDirectory()
+                            + File.separator + Environment.DIRECTORY_DCIM
+                            + File.separator + "Camera" + File.separator+fileName;
+                    Toast.makeText(SaveActivity.this, "Save successfully. ", Toast.LENGTH_LONG).show();
+                    success.setText("The Location is:"+picPath);
+                    flag = 0;
+                }
+                else{
+                    //if the image has been saved. give tips to user.
+                    Toast.makeText(SaveActivity.this, "Already saved. \n" +
+                            "Find it in the location below.", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
