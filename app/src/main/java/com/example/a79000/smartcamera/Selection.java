@@ -27,7 +27,6 @@ public class Selection extends AppCompatActivity {
 
         btnTake = (Button)findViewById(R.id.take);
         btnSelect = (Button)findViewById(R.id.select);
-        ivShow = (ImageView)findViewById(R.id.iv_show);
         photoFile = new File(getExternalFilesDir("img"), "scan.jpg");
 
         //when take photo button clicked
@@ -53,12 +52,14 @@ public class Selection extends AppCompatActivity {
             return;
         }
         if (requestCode == 100 && photoFile.exists()) {
-            Bitmap bitmap = BitmapFactory.decodeFile(photoFile.getPath());
-            ivShow.setImageBitmap(bitmap);
+            Intent intent = new Intent(this,SaveActivity.class);
+            intent.putExtra("imageFile",photoFile);
+            startActivity(intent);
         }
     }
 
-    // 用来计算返回键的点击间隔时间
+
+    //click the back button twice, you will back to your phone's home page.
     private long exitTime = 0;
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -87,8 +88,8 @@ public class Selection extends AppCompatActivity {
     public void bntShare(View view) {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_SUBJECT, "This is my smart camera. GitHub Link:...");//分享的标题
-        intent.putExtra(Intent.EXTRA_TEXT, "This is my smart camera. GitHub Link:...");//分享的内容
+        intent.putExtra(Intent.EXTRA_SUBJECT, "This is my smart camera. GitHub Link:https://github.com/xx790008409/SmartCamera");//分享的标题
+        intent.putExtra(Intent.EXTRA_TEXT, "This is my smart camera. GitHub Link:https://github.com/xx790008409/SmartCamera");//分享的内容
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(Intent.createChooser(intent, "share"));
     }
