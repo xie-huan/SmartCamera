@@ -1,9 +1,11 @@
 package com.example.a79000.smartcamera;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -15,7 +17,8 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        final Intent intent = new Intent(this,WelcomeAgain.class);
+        firstRun();
+        /*final Intent intent = new Intent(this,WelcomeAgain.class);
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
             @Override
@@ -25,7 +28,28 @@ public class WelcomeActivity extends AppCompatActivity {
             }
 
         };
-        timer.schedule(task, 2000); // 2秒后执行
+        timer.schedule(task, 2000); // 2秒后执行*/
+    }
+
+    private void firstRun() {
+        SharedPreferences sharedPreferences = getSharedPreferences("FirstRun", 0);
+        Boolean first_run = sharedPreferences.getBoolean("First", true);
+        if (first_run) {
+            sharedPreferences.edit().putBoolean("First", false).commit();
+            final Intent intent = new Intent(this,WelcomeAgain.class);
+            Timer timer = new Timer();
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    startActivity(intent);
+                    WelcomeActivity.this.finish();
+                }
+            };
+            timer.schedule(task, 3000); // 2秒后执行
+        } else {
+            final Intent intent = new Intent(this,Selection.class);
+            startActivity(intent);
+        }
     }
 
     public void bntNext(View view) {
