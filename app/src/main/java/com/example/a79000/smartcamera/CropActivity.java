@@ -1,5 +1,6 @@
 package com.example.a79000.smartcamera;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -7,7 +8,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.os.Build;
+import android.os.StrictMode;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -49,6 +53,8 @@ public class CropActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crop);
+        WelcomeActivity.activityList.add(this);
+
         ivCrop = (CropImageView) findViewById(R.id.iv_crop);
         btnCancel = (Button) findViewById(R.id.btn_cancel);
         btnOk = (Button) findViewById(R.id.btn_ok);
@@ -86,6 +92,10 @@ public class CropActivity extends AppCompatActivity {
 
         tempFile = new File(getExternalFilesDir("img"), "temp.jpg");
 
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+        builder.detectFileUriExposure();
+
         selectPhoto();
     }
 
@@ -99,6 +109,8 @@ public class CropActivity extends AppCompatActivity {
         } else {
             Intent startCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             startCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tempFile));
+
+
             if (startCameraIntent.resolveActivity(getPackageManager()) != null) {
                 startActivityForResult(startCameraIntent, REQUEST_CODE_TAKE_PHOTO);
             }

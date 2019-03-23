@@ -1,46 +1,81 @@
 package com.example.a79000.smartcamera;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.os.StrictMode;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Selection extends AppCompatActivity {
 
     Button btnTake;
-    Button btnSelect;
-    ImageView ivShow;
     File photoFile;
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selection);
+        WelcomeActivity.activityList.add(this);
+
+        firstUse();
 
         btnTake = (Button)findViewById(R.id.take);
-        btnSelect = (Button)findViewById(R.id.select);
         photoFile = new File(getExternalFilesDir("img"), "scan.jpg");
 
+        final GestureDetector gestureDetector = new GestureDetector(Selection.this, new GestureDetector.SimpleOnGestureListener() {
+
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {//click
+                startActivityForResult(CropActivity.getJumpIntent(Selection.this, false, photoFile), 100);
+                return super.onSingleTapConfirmed(e);
+            }
+
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {//double click
+                startActivityForResult(CropActivity.getJumpIntent(Selection.this, true, photoFile), 100);
+                return super.onDoubleTap(e);
+            }
+
+            /**
+             * double click
+             * @param e
+             * @return
+             */
+            @Override
+            public boolean onDoubleTapEvent(MotionEvent e) {
+                return super.onDoubleTapEvent(e);
+            }
+        });
+
         //when take photo button clicked
-        btnTake.setOnClickListener(new View.OnClickListener() {
+
+        /*btnTake.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivityForResult(CropActivity.getJumpIntent(Selection.this, false, photoFile), 100);
             }
-        });
-
-        btnSelect.setOnClickListener(new View.OnClickListener() {
+        });*/
+        btnTake.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                startActivityForResult(CropActivity.getJumpIntent(Selection.this, true, photoFile), 100);
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector.onTouchEvent(event);
             }
         });
     }
@@ -81,6 +116,16 @@ public class Selection extends AppCompatActivity {
     }
     //when exit button clicked
     public void butExit(View view) {
+        exit();
+    }
+    public void exit()
+    {
+        for(Activity act:WelcomeActivity.activityList)
+        {
+            act.finish();
+        }
+
+        System.exit(0);
 
     }
 
@@ -93,4 +138,14 @@ public class Selection extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(Intent.createChooser(intent, "share"));
     }
+
+    public void firstUse(){
+        SharedPreferences sharedPreferences = getSharedPreferences("FirstUse", 0);
+        Boolean first_run = sharedPreferences.getBoolean("Firstu", true);
+        if (first_run) {
+            ActivityCompat.requestPermissions(Selection.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            sharedPreferences.edit().putBoolean("Firstu", false).commit();
+        }
+    }
+
 }

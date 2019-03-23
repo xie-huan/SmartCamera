@@ -10,29 +10,17 @@
 
     <Button
         android:id="@+id/take"
-        android:layout_width="143dp"
-        android:layout_height="79dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="244dp"
-        android:layout_marginEnd="8dp"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="192dp"
+        android:layout_marginEnd="120dp"
+        android:background="@drawable/shape"
         android:text="Take Photo"
         android:textSize="24sp"
-        app:layout_constraintEnd_toStartOf="@+id/select"
-        app:layout_constraintHorizontal_bias="0.636"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/select"
-        android:layout_width="143dp"
-        android:layout_height="79dp"
-        android:layout_marginEnd="36dp"
-        android:text="Select Photo"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/take"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/take"
-        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/exit"
@@ -40,6 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:background="@drawable/shape"
         android:onClick="butExit"
         android:text="Exit"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -51,9 +40,22 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp"
+        android:background="@drawable/shape"
         android:onClick="bntShare"
         android:text="Share"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tips"
+        android:layout_width="330dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:text="Double Click the Upper Button to Select Photo from Album"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/take" />
 
 </android.support.constraint.ConstraintLayout>

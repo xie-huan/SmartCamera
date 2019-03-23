@@ -15,6 +15,7 @@ public class WelcomeAgain extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcom_again);
+        WelcomeActivity.activityList.add(this);
 
         final Intent intent = new Intent(this,com.example.a79000.smartcamera.Selection.class);
         Timer timer = new Timer();

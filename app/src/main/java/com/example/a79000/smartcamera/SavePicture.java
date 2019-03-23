@@ -56,7 +56,7 @@ public class SavePicture {
      * picName:you can decide your file name by yourself
      */
     public static boolean saveBmp2Gallery(Context context, Bitmap bmp, String picName) {
-        saveImageToGallery(bmp,picName);
+        //saveImageToGallery(bmp,picName);
         String fileName = null;
         //系统相册目录
         String galleryPath = Environment.getExternalStorageDirectory()
