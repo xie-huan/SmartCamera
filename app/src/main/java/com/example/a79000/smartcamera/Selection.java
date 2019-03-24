@@ -4,10 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Build;
-import android.os.StrictMode;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,12 +12,9 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Selection extends AppCompatActivity {
 
@@ -34,7 +27,9 @@ public class Selection extends AppCompatActivity {
         setContentView(R.layout.activity_selection);
         WelcomeActivity.activityList.add(this);
 
-        firstUse();
+        //ActivityCompat.requestPermissions(Selection.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+
+        //firstUse();
 
         btnTake = (Button)findViewById(R.id.take);
         photoFile = new File(getExternalFilesDir("img"), "scan.jpg");
@@ -78,6 +73,11 @@ public class Selection extends AppCompatActivity {
                 return gestureDetector.onTouchEvent(event);
             }
         });
+
+
+        while (!ActivityCompat.shouldShowRequestPermissionRationale(Selection.this,Manifest.permission.CAMERA)){
+            ActivityCompat.requestPermissions(Selection.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},0);
+        }
     }
 
     @Override

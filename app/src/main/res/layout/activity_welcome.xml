@@ -21,8 +21,8 @@
     <TextView
         android:id="@+id/textView"
         android:layout_width="274dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="148dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
         android:fontFamily="casual"
         android:text="Smart Camera"
         android:textColor="@color/colorAccent"
