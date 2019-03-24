@@ -21,21 +21,24 @@
 
     <Button
         android:id="@+id/save"
-        android:layout_width="125dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="36dp"
         android:layout_marginBottom="76dp"
         android:background="@drawable/shape"
         android:text="Save"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/cancel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/croppedImage" />
 
     <Button
         android:id="@+id/cancel"
-        android:layout_width="112dp"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="36dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/shape"
         android:text="Cancel"
         app:layout_constraintBottom_toBottomOf="@+id/save"
