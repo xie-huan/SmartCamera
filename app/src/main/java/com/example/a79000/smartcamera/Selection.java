@@ -75,7 +75,7 @@ public class Selection extends AppCompatActivity {
         });
 
 
-        while (!ActivityCompat.shouldShowRequestPermissionRationale(Selection.this,Manifest.permission.CAMERA)){
+        if(!ActivityCompat.shouldShowRequestPermissionRationale(Selection.this,Manifest.permission.CAMERA)){
             ActivityCompat.requestPermissions(Selection.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},0);
         }
     }
