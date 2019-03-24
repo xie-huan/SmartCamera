@@ -38,7 +38,7 @@ public class WelcomeActivity extends AppCompatActivity {
                     WelcomeActivity.this.finish();
                 }
             };
-            timer.schedule(task, 2000); // 2秒后执行
+            timer.schedule(task, 3000); // 3 seconds
         } else {
             final Intent intent = new Intent(this,Selection.class);
             startActivity(intent);

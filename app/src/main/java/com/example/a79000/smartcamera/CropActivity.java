@@ -78,7 +78,7 @@ public class CropActivity extends AppCompatActivity {
                     }
                     finish();
                 } else {
-                    Toast.makeText(CropActivity.this, "cannot crop correctly", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CropActivity.this, "Cannot crop correctly. It should be a convex quadrilateral.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
