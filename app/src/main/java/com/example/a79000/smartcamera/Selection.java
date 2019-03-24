@@ -4,9 +4,11 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -15,11 +17,19 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.List;
 
-public class Selection extends AppCompatActivity {
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
+
+public class Selection extends AppCompatActivity implements EasyPermissions.PermissionCallbacks,
+        EasyPermissions.RationaleCallbacks{
 
     Button btnTake;
     File photoFile;
+
+    private static final int RC_CAMERA_PERM = 123;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,57 +37,69 @@ public class Selection extends AppCompatActivity {
         setContentView(R.layout.activity_selection);
         WelcomeActivity.activityList.add(this);
 
-        //ActivityCompat.requestPermissions(Selection.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
-
-        //firstUse();
 
         btnTake = (Button)findViewById(R.id.take);
         photoFile = new File(getExternalFilesDir("img"), "scan.jpg");
 
-        final GestureDetector gestureDetector = new GestureDetector(Selection.this, new GestureDetector.SimpleOnGestureListener() {
-
+        btnTake.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onSingleTapConfirmed(MotionEvent e) {//click
-                startActivityForResult(CropActivity.getJumpIntent(Selection.this, false, photoFile), 100);
-                return super.onSingleTapConfirmed(e);
-            }
-
-            @Override
-            public boolean onDoubleTap(MotionEvent e) {//double click
-                startActivityForResult(CropActivity.getJumpIntent(Selection.this, true, photoFile), 100);
-                return super.onDoubleTap(e);
-            }
-
-            /**
-             * double click
-             * @param e
-             * @return
-             */
-            @Override
-            public boolean onDoubleTapEvent(MotionEvent e) {
-                return super.onDoubleTapEvent(e);
-            }
-        });
-
-        //when take photo button clicked
-
-        /*btnTake.setOnClickListener(new View.OnClickListener() {
-            @Override
+            @AfterPermissionGranted(RC_CAMERA_PERM)
             public void onClick(View v) {
-                startActivityForResult(CropActivity.getJumpIntent(Selection.this, false, photoFile), 100);
-            }
-        });*/
-        btnTake.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return gestureDetector.onTouchEvent(event);
-            }
+                if (hasCameraPermission()) {
+                    // Have permission, do the thing!
+                    //Toast.makeText(Selection.this, "TODO: Camera things", Toast.LENGTH_LONG).show();
+                    startActivityForResult(CropActivity.getJumpIntent(Selection.this, false, photoFile), 100);
+                } else {
+                    // Ask for one permission
+                    EasyPermissions.requestPermissions(
+                            Selection.this,
+                            getString(R.string.rationale_camera),
+                            RC_CAMERA_PERM,
+                            Manifest.permission.CAMERA);
+                }
+              }
+                //startActivityForResult(CropActivity.getJumpIntent(Selection.this, false, photoFile), 100);
         });
 
+        btnTake.setOnLongClickListener(new LongClick());
+    }
 
-        if(!ActivityCompat.shouldShowRequestPermissionRationale(Selection.this,Manifest.permission.CAMERA)){
-            ActivityCompat.requestPermissions(Selection.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},0);
+    private class LongClick implements View.OnLongClickListener {
+        @Override
+        public boolean onLongClick(View view){
+            startActivityForResult(CropActivity.getJumpIntent(Selection.this, true, photoFile), 100);
+            return true;
         }
+    }
+
+    private boolean hasCameraPermission() {
+        return EasyPermissions.hasPermissions(this, Manifest.permission.CAMERA);
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this).build().show();
+        }
+    }
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+    }
+    @Override
+    public void onRationaleAccepted(int requestCode) {
+        Log.d("Selection", "onRationaleAccepted:" + requestCode);
+    }
+
+    @Override
+    public void onRationaleDenied(int requestCode) {
+        Log.d("Selection", "onRationaleDenied:" + requestCode);
     }
 
     @Override
@@ -91,10 +113,17 @@ public class Selection extends AppCompatActivity {
             intent.putExtra("imageFile",photoFile);
             startActivity(intent);
         }
+        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+            String yes = getString(R.string.yes);
+            String no = getString(R.string.no);
+
+            // Do something after user returned from app settings screen, like showing a Toast.
+
+        }
     }
 
 
-    //click the back button twice, you will back to your phone's home page.
+    //click the ‘back’ button twice, you will back to your phone's home page.
     private long exitTime = 0;
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -114,6 +143,7 @@ public class Selection extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
+
     //when exit button clicked
     public void butExit(View view) {
         exit();
@@ -124,9 +154,7 @@ public class Selection extends AppCompatActivity {
         {
             act.finish();
         }
-
         System.exit(0);
-
     }
 
     //when share button clicked
@@ -139,13 +167,5 @@ public class Selection extends AppCompatActivity {
         startActivity(Intent.createChooser(intent, "share"));
     }
 
-    public void firstUse(){
-        SharedPreferences sharedPreferences = getSharedPreferences("FirstUse", 0);
-        Boolean first_run = sharedPreferences.getBoolean("Firstu", true);
-        if (first_run) {
-            ActivityCompat.requestPermissions(Selection.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-            sharedPreferences.edit().putBoolean("Firstu", false).commit();
-        }
-    }
 
 }

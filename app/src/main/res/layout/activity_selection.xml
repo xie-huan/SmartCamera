@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:layout_marginBottom="79dp"
-        android:text="Double Click the Upper Button to Select Photo from Album"
+        android:text="Long Press the Button to Select Photo from Album"
         android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@+id/exit"
         app:layout_constraintEnd_toEndOf="parent"
