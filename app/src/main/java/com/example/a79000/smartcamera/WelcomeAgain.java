@@ -25,6 +25,6 @@ public class WelcomeAgain extends AppCompatActivity {
             }
 
         };
-        timer.schedule(task, 2000); // 2秒后执行
+        timer.schedule(task, 2000); // 2 second
     }
 }

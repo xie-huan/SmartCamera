@@ -68,31 +68,7 @@ public class SaveActivity extends AppCompatActivity implements EasyPermissions.P
             public void onClick(View v) {
                 if(hasStoragePermission()){
                     //TO DO
-
-                    //the flag ensure you only save the picture once.
-                    if(flag == 1){
-                        //save picture in mobile phone
-                        //generate the filename randomly.
-                        Random random = new Random();
-                        String fileName = String.valueOf(random.nextInt(Integer.MAX_VALUE));
-
-                        SavePicture.saveBmp2Gallery(SaveActivity.this,
-                                BitmapFactory.decodeFile(croppedFile.getPath()),
-                                fileName);
-
-                        String picPath = Environment.getExternalStorageDirectory()
-                                + File.separator + Environment.DIRECTORY_DCIM
-                                + File.separator + "Camera" + File.separator+fileName;
-                        Toast.makeText(SaveActivity.this, "Save successfully. ", Toast.LENGTH_LONG).show();
-                        success.setText("The Location is:"+picPath);
-                        cancel.setText("Back");
-                        flag = 0;
-                    }
-                    else{
-                        //if the image has been saved. give tips to user.
-                        Toast.makeText(SaveActivity.this, "Already saved.\n" +
-                                "Find it in the location below.", Toast.LENGTH_LONG).show();
-                    }
+                    savePic();
                 }
                 else{
                     EasyPermissions.requestPermissions(
@@ -103,6 +79,33 @@ public class SaveActivity extends AppCompatActivity implements EasyPermissions.P
                 }
             }
         });
+    }
+
+    private void savePic(){
+        //the flag ensure you only save the picture once.
+        if(flag == 1){
+            //save picture in mobile phone
+            //generate the filename randomly.
+            Random random = new Random();
+            String fileName = String.valueOf(random.nextInt(Integer.MAX_VALUE));
+
+            SavePicture.saveBmp2Gallery(SaveActivity.this,
+                    BitmapFactory.decodeFile(croppedFile.getPath()),
+                    fileName);
+
+            String picPath = Environment.getExternalStorageDirectory()
+                    + File.separator + Environment.DIRECTORY_DCIM
+                    + File.separator + "Camera" + File.separator+fileName;
+            Toast.makeText(SaveActivity.this, "Save successfully. ", Toast.LENGTH_LONG).show();
+            success.setText("The Location is:"+picPath);
+            cancel.setText("Back");
+            flag = 0;
+        }
+        else{
+            //if the image has been saved. give tips to user.
+            Toast.makeText(SaveActivity.this, "Already saved.\n" +
+                    "Find it in the location below.", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -127,6 +130,7 @@ public class SaveActivity extends AppCompatActivity implements EasyPermissions.P
     }
     @Override
     public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        savePic();
     }
     @Override
     public void onRationaleAccepted(int requestCode) {
@@ -141,14 +145,6 @@ public class SaveActivity extends AppCompatActivity implements EasyPermissions.P
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
-            String yes = getString(R.string.yes);
-            String no = getString(R.string.no);
-
-            // Do something after user returned from app settings screen, like showing a Toast.
-
-        }
     }
 
 }

@@ -7,9 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -89,6 +87,7 @@ public class Selection extends AppCompatActivity implements EasyPermissions.Perm
     }
     @Override
     public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        startActivityForResult(CropActivity.getJumpIntent(Selection.this, false, photoFile), 100);
     }
     @Override
     public void onRationaleAccepted(int requestCode) {
@@ -107,16 +106,9 @@ public class Selection extends AppCompatActivity implements EasyPermissions.Perm
             return;
         }
         if (requestCode == 100 && photoFile.exists()) {
-            Intent intent = new Intent(this,SaveActivity.class);
-            intent.putExtra("imageFile",photoFile);
+            Intent intent = new Intent(this, SaveActivity.class);
+            intent.putExtra("imageFile", photoFile);
             startActivity(intent);
-        }
-        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
-            String yes = getString(R.string.yes);
-            String no = getString(R.string.no);
-
-            // Do something after user returned from app settings screen, like showing a Toast.
-
         }
     }
 
