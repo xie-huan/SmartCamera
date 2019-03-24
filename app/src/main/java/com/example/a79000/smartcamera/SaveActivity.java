@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
-import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -86,11 +85,12 @@ public class SaveActivity extends AppCompatActivity implements EasyPermissions.P
                                 + File.separator + "Camera" + File.separator+fileName;
                         Toast.makeText(SaveActivity.this, "Save successfully. ", Toast.LENGTH_LONG).show();
                         success.setText("The Location is:"+picPath);
+                        cancel.setText("Back");
                         flag = 0;
                     }
                     else{
                         //if the image has been saved. give tips to user.
-                        Toast.makeText(SaveActivity.this, "Already saved. \n" +
+                        Toast.makeText(SaveActivity.this, "Already saved.\n" +
                                 "Find it in the location below.", Toast.LENGTH_LONG).show();
                     }
                 }
