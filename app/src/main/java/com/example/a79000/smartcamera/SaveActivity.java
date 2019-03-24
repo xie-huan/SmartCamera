@@ -1,12 +1,15 @@
 package com.example.a79000.smartcamera;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.os.StrictMode;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,9 +17,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.List;
 import java.util.Random;
 
-public class SaveActivity extends AppCompatActivity {
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
+
+public class SaveActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks,
+        EasyPermissions.RationaleCallbacks{
 
     ImageView croppedImage;
     File croppedFile;
@@ -26,6 +34,7 @@ public class SaveActivity extends AppCompatActivity {
     TextView success;
 
     int flag = 1;
+    private static final int RC_STORAGE_PERM = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,32 +67,88 @@ public class SaveActivity extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //the flag ensure you only save the picture once.
-                if(flag == 1){
-                    //save picture in mobile phone
+                if(hasStoragePermission()){
+                    //TO DO
 
-                    //generate the filename randomly.
-                    Random random = new Random();
-                    String fileName = String.valueOf(random.nextInt(Integer.MAX_VALUE));
+                    //the flag ensure you only save the picture once.
+                    if(flag == 1){
+                        //save picture in mobile phone
+                        //generate the filename randomly.
+                        Random random = new Random();
+                        String fileName = String.valueOf(random.nextInt(Integer.MAX_VALUE));
 
-                    SavePicture.saveBmp2Gallery(SaveActivity.this,
-                            BitmapFactory.decodeFile(croppedFile.getPath()),
-                            fileName);
+                        SavePicture.saveBmp2Gallery(SaveActivity.this,
+                                BitmapFactory.decodeFile(croppedFile.getPath()),
+                                fileName);
 
-                    String picPath = Environment.getExternalStorageDirectory()
-                            + File.separator + Environment.DIRECTORY_DCIM
-                            + File.separator + "Camera" + File.separator+fileName;
-                    Toast.makeText(SaveActivity.this, "Save successfully. ", Toast.LENGTH_LONG).show();
-                    success.setText("The Location is:"+picPath);
-                    flag = 0;
+                        String picPath = Environment.getExternalStorageDirectory()
+                                + File.separator + Environment.DIRECTORY_DCIM
+                                + File.separator + "Camera" + File.separator+fileName;
+                        Toast.makeText(SaveActivity.this, "Save successfully. ", Toast.LENGTH_LONG).show();
+                        success.setText("The Location is:"+picPath);
+                        flag = 0;
+                    }
+                    else{
+                        //if the image has been saved. give tips to user.
+                        Toast.makeText(SaveActivity.this, "Already saved. \n" +
+                                "Find it in the location below.", Toast.LENGTH_LONG).show();
+                    }
                 }
                 else{
-                    //if the image has been saved. give tips to user.
-                    Toast.makeText(SaveActivity.this, "Already saved. \n" +
-                            "Find it in the location below.", Toast.LENGTH_LONG).show();
+                    EasyPermissions.requestPermissions(
+                            SaveActivity.this,
+                            getString(R.string.storage),
+                            RC_STORAGE_PERM,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 }
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // EasyPermissions handles the request result.
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    private boolean hasStoragePermission() {
+        return EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this).build().show();
+        }
+    }
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+    }
+    @Override
+    public void onRationaleAccepted(int requestCode) {
+        Log.d("Selection", "onRationaleAccepted:" + requestCode);
+    }
+
+    @Override
+    public void onRationaleDenied(int requestCode) {
+        Log.d("Selection", "onRationaleDenied:" + requestCode);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+            String yes = getString(R.string.yes);
+            String no = getString(R.string.no);
+
+            // Do something after user returned from app settings screen, like showing a Toast.
+
+        }
     }
 
 }

@@ -14,5 +14,5 @@
     </string>
     <string name="camera">Camera</string>
     <string name="location_and_contacts">Location and Contacts</string>
-    <string name="sms">SMS</string>
+    <string name="storage">Storage</string>
 </resources>
