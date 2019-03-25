@@ -1,0 +1,3 @@
+# SmartCamera
+MAD------final project
+
