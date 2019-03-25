@@ -1,4 +1,5 @@
 # SmartCamera
 MAD------final project
 
-![camera_deny](demo/constraint-layout.jpg)
+## Demo
+![camera_deny](https://github.com/xx790008409/SmartCamera/demo/constraint-layout.jpg)
